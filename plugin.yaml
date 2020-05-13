@@ -1,15 +1,40 @@
-# Common definitions using anchors and aliases
-common_in: &common_in
+# Common definitions using anchors, merges and aliases
+# For more information, see:
+# http://blogs.perl.org/users/tinita/2019/05/reusing-data-with-yaml-anchors-aliases-and-merge-keys.html
+
+# Common ports
+commonIn: &commonIn
         -   name: input_data
             description: {en: Input data, pt: Dados de entrada}
             direction: INPUT
             interfaces: [1] # 1 is Data Interface in Lemonade
-common_out: &common_out
+commonOut: &commonOut
         -   name: output_data
             description: {en: Output data, pt: Dados de saída}
             direction: OUTPUT
             interfaces: [1]
 
+# Common attributes
+attribute: &attribute
+        -   name: attribute
+            label: {en: Attribute, pt: Atributo}
+            help: {en: Attribute used as input, pt: Atributo usado como entrada}
+            type: attribute-selector
+            required: true
+
+output: &output
+        -   name: output 
+            label: {en: New attribute, pt: Novo atributo}
+            help: {en: Attribute used as output, pt: Atributo usado como saída}
+            required: true
+            type: int
+# Operation categories: where in toolbox tree operation is 
+# going to be displayed
+dataManipulationByColumn: &dataManipulationByColumn
+    [7, 30]
+
+commonFields: &commonFields
+    [43, 110]
 plugin:
     name: Demo plugin
     description: A simple demo used to test Lemonade plugin
@@ -17,33 +42,40 @@ plugin:
     version: '1.0'
     copyright: (c) 2020 - Speed Labs/DCC/UFMG
     provides:
-        compiler: {}
-        executor: {}
-        platform:
-        - imports:
-            - operations: [1]
+        compiler: 
+        - name: simpledemo.transpiler
+        executor:
+        - name: simpledemo.minion
+        imported-operations: [1]
         operations:
-        -   name: UpperCaseOperation
-            description: Logic NOT operation
+        -   slug: demo::upper_case
+            name: {en: Upper case, pt: Caixa alta}
+            description: {en: Convert an attribute to upper case, pt: Converte um atributo para letras maiúsculas}
             ports:
-                - << : *common_in
-                - << : *common_out
+                - << : *commonIn
+                - << : *commonOut
             properties:
-                - name: attribute
-                  label: {en: Attribute, pt: Atributo}
-                  help: {en: Attribute used as input, pt: Atributo usado como entrada}
-                  type: attribute-selector
-                  required: true
-                - name: output 
-                  label: {en: New attribute, pt: Novo atributo}
-                  help: {en: Attribute used as output, pt: Atributo usado como saída}
-                  suggested_widget: attribute-selector
-                  required: true
-                  type: int
+                - << : *attribute
+                - << : *output
+            imported-properties: 
+                *commonFields
             scripts:
-                - copyX(ax, ax)
-                 
-    
-    
-    
-    
+                - copyInputAddField(task, 'output', false, 'output')
+            categories:
+                *dataManipulationByColumn
+
+        -   slug: demo::lower_case
+            name: {en: Lower case, pt: Caixa baixa}
+            description: {en: Convert an attribute to lower case, pt: Converte um atributo para letras minúsculas}
+            ports:
+                - << : *commonIn
+                - << : *commonOut
+            properties:
+                - << : *attribute
+                - << : *output
+            imported-properties: 
+                *commonFields
+            scripts:
+                - copyInputAddField(task, 'output', false, 'output')
+            categories:
+                *dataManipulationByColumn
