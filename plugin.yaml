@@ -1,0 +1,49 @@
+# Common definitions using anchors and aliases
+common_in: &common_in
+        -   name: input_data
+            description: {en: Input data, pt: Dados de entrada}
+            direction: INPUT
+            interfaces: [1] # 1 is Data Interface in Lemonade
+common_out: &common_out
+        -   name: output_data
+            description: {en: Output data, pt: Dados de saída}
+            direction: OUTPUT
+            interfaces: [1]
+
+plugin:
+    name: Demo plugin
+    description: A simple demo used to test Lemonade plugin
+    uuid: e8bc429d-16fa-4840-bced-838ace93fa46
+    version: '1.0'
+    copyright: (c) 2020 - Speed Labs/DCC/UFMG
+    provides:
+        compiler: {}
+        executor: {}
+        platform:
+        - imports:
+            - operations: [1]
+        operations:
+        -   name: UpperCaseOperation
+            description: Logic NOT operation
+            ports:
+                - << : *common_in
+                - << : *common_out
+            properties:
+                - name: attribute
+                  label: {en: Attribute, pt: Atributo}
+                  help: {en: Attribute used as input, pt: Atributo usado como entrada}
+                  type: attribute-selector
+                  required: true
+                - name: output 
+                  label: {en: New attribute, pt: Novo atributo}
+                  help: {en: Attribute used as output, pt: Atributo usado como saída}
+                  suggested_widget: attribute-selector
+                  required: true
+                  type: int
+            scripts:
+                - copyX(ax, ax)
+                 
+    
+    
+    
+    
