@@ -42,6 +42,9 @@ plugin:
     version: '1.0'
     copyright: (c) 2020 - Speed Labs/DCC/UFMG
     provides:
+        platform: 
+            name: Plugin Demo
+            slug: demo
         compiler: 
         - name: simpledemo.transpiler
         executor:
