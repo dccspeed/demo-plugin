@@ -4,14 +4,16 @@
 
 # Common ports
 commonIn: &commonIn
-        -   name: input_data
+        -   slug: input
+            name: {en: Input data, pt: Dados de entrada}
             description: {en: Input data, pt: Dados de entrada}
-            direction: INPUT
+            type: INPUT
             interfaces: [1] # 1 is Data Interface in Lemonade
 commonOut: &commonOut
-        -   name: output_data
+        -   slug: output
+            name: {en: Output data, pt: Dados de saída}
             description: {en: Output data, pt: Dados de saída}
-            direction: OUTPUT
+            type: OUTPUT
             interfaces: [1]
 
 # Common attributes
@@ -19,37 +21,41 @@ attribute: &attribute
         -   name: attribute
             label: {en: Attribute, pt: Atributo}
             help: {en: Attribute used as input, pt: Atributo usado como entrada}
-            type: attribute-selector
+            suggested-widget: attribute-selector
             required: true
+            type: TEXT
 
 output: &output
-        -   name: output 
+        -   name: output
             label: {en: New attribute, pt: Novo atributo}
             help: {en: Attribute used as output, pt: Atributo usado como saída}
             required: true
-            type: int
+            suggested-widget: text
+            type: TEXT
 # Operation categories: where in toolbox tree operation is 
 # going to be displayed
 dataManipulationByColumn: &dataManipulationByColumn
     [7, 30]
 
-commonFields: &commonFields
-    [43, 110]
+commonForms: &commonForms
+    [41, 110]
 plugin:
     name: Demo plugin
     description: A simple demo used to test Lemonade plugin
     uuid: e8bc429d-16fa-4840-bced-838ace93fa46
     version: '1.0'
     copyright: (c) 2020 - Speed Labs/DCC/UFMG
+    url: https://github.com/dccspeed/demo-plugin.git
     provides:
         platform: 
-            name: Plugin Demo
+            name: {en: Plugin Demo, pt: Demonstração plugin}
+            description: {en: Plugin Demo, pt: Demonstração plugin}
             slug: demo
         compiler: 
         - name: simpledemo.transpiler
         executor:
         - name: simpledemo.minion
-        imported-operations: [1]
+        imported-operations: [18]
         operations:
         -   slug: demo::upper_case
             name: {en: Upper case, pt: Caixa alta}
@@ -57,11 +63,11 @@ plugin:
             ports:
                 - << : *commonIn
                 - << : *commonOut
-            properties:
+            fields:
                 - << : *attribute
                 - << : *output
-            imported-properties: 
-                *commonFields
+            imported-forms: 
+                *commonForms
             scripts:
                 - copyInputAddField(task, 'output', false, 'output')
             categories:
@@ -73,11 +79,11 @@ plugin:
             ports:
                 - << : *commonIn
                 - << : *commonOut
-            properties:
+            fields:
                 - << : *attribute
                 - << : *output
-            imported-properties: 
-                *commonFields
+            imported-forms: 
+                *commonForms
             scripts:
                 - copyInputAddField(task, 'output', false, 'output')
             categories:
