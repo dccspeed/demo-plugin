@@ -1,0 +1,14 @@
+{%- set all_tasks = [] %}
+{%- for instance in instances %}
+{%- if instance.has_code and instance.enabled %}
+{%- do all_tasks.append(instance) %}
+{%- endif %}
+{%- endfor %}
+
+{%- for instance in all_tasks %}
+# Demo
+# {{instance.generate_code()}}
+{%- endfor %}
+def main(session, cached_state, emit_event):
+    pass
+
